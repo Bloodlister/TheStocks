@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% dump(cart) %}
+
+{% block body %}
+    {% if cart|length != 0 %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 bg-primary leftCorners">
+                    <h3 class="text-center">OverView</h3>
+                </div>
+                <div class="col-md-4 bg-info">
+                    <h3 class="text-center">Purchase Info</h3>
+                </div>
+                <div class="col-md-4 bg-info rightCorners">
+                    <h3 class="text-center">Finish!</h3>
+                </div>
+            </div>
+        </div>
+
+        <br>
+    {% endif %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                {% if cart|length != 0 %}
+                    {% for package in cart %}
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2>{{ package.item.name }}</h2>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <form method="post" action="{{ path('cart_item_remove', { 'id': package.id }) }}">
+                                            <div class="form-group">
+                                                <button class="btn btn-danger btn-lg pull-right">Remove</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <img class="col-md-3 cartImage" src="{{ asset(package.item.imagePath) }}">
+                                    <div class="col-md-5 text-center">
+                                        {{ package.item.description | length > 300 ? package.item.description|slice(0, 300) ~ '...' : package.item.description }}
+
+                                    </div>
+                                    <div class=" col-md-4 text-right ">
+                                        <h5>Price: {{ package.item.price | number_format(2, '.') }} lv.</h5>
+                                        <h4>X</h4>
+                                        <h5>Quantity: {{ package.quantity }}</h5>
+                                        <hr>
+                                        <h4>Cost: {{ (package.item.price * package.quantity) | number_format(2, '.') }} lv.</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <h3>You have: {{ app.user.cash | number_format(2, '.') }} lv.</h3>
+                            <h3>Total: {{ totalCost | number_format(2, '.')}} lv.</h3>
+                            <hr>
+                            <h2>Remains: {{ (app.user.cash - totalCost) | number_format(2, '.')}} lv.</h2>
+                        </div>
+                        <div class="col-md-6 purchase-button-form">
+                            {% if app.user.cash >= totalCost %}
+                                <form method="post" action="{{ path('cart_finalize') }}">
+                                    <button type="submit" class="btn btn-success btn-block purchase-button">Make Purchase</button>
+                                </form>
+                            {% else %}
+                                <button disabled="disabled" class="btn btn-default btn-disabled btn-block purchase-button">Not Enough Money</button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <h3>You currently have nothing in your shopping cart.</h3>
+                    <h2>Go pick out some stuff!</h2>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

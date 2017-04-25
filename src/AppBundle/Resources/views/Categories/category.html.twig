@@ -1,0 +1,76 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}
+    {% if category is not empty %}
+        The Stocks: {{ category.name }}
+    {% else %}
+        The Stocks
+    {% endif %}
+{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+
+        <div class="dropdown">
+            <button class="btn btn-lg btn-default dropdown-toggle" type="button" data-toggle="dropdown">Order By
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="?orderBy=price&in=asc">Price Ascending</a></li>
+                <li><a href="?orderBy=price&in=desc">Price Descending</a></li>
+                <li class="divider"></li>
+                <li><a href="?orderBy=name&in=asc">A - Z</a></li>
+                <li><a href="?orderBy=name&in=desc">Z - A</a></li>
+                <li class="divider"></li>
+                <li><a href="?orderBy=createdAt&in=desc">New to old</a></li>
+                <li><a href="?orderBy=createdAt&in=asc">Old to New</a></li>
+            </ul>
+        </div>
+
+        <br>
+
+        <div class="row">
+            {% if items|length != 0 %}
+                {% for item in items %}
+                    <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <a href="{{ path('item_show', { 'id': item.id }) }}"><img class="thumbImage" src="{{ asset(item.imagePath) }}"></a>
+                            <div class="caption">
+                                <h4>
+                                    <a target="_blank" href="{{ path('item_show', { 'id': item.id}) }}">
+                                        {{ item.name|length > 20 ? item.name|slice(0, 20) ~ '...' : item.name }}
+                                    </a>
+                                </h4>
+                                <p>{{ item.description|length > 30 ? item.description|slice(0, 30) ~ '...' : item.description }}</p>
+                                {% if item.quantity != 0 %}
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4 class="bg-success">Price: {{ item.price|number_format(2, '.') }} lv.</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5>
+                                                In Stock: {{ item.quantity }}
+                                                <a href="{{ path('user_profile', {'id': item.user.id}) }}" class="pull-right">{{ item.user.username }}</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <h4 class="pull-right bg-danger">Out of Stock</h4>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                No items in this category.
+            {% endif %}
+        </div>
+
+        <div class="navigatior">
+            {{ knp_pagination_render(items) }}
+        </div>
+    </div>
+{% endblock %}
+

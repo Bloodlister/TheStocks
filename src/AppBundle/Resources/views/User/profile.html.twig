@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}The Stocks: {{ user.username }}{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-4">
+            <h1>
+                {{ user.username }}
+            </h1>
+                {% if user.id == app.user.id %}
+                    <a href="/profile/edit" class="btn btn-success btn-lg">Edit</a>
+                    <a href="/profile/{{ app.user.id }}/purchases" class="btn btn-primary btn-lg">Inventory</a>
+                {% endif %}
+
+            <h3>Contact: {{ user.email }}</h3>
+            <hr>
+        </div>
+    {% if user.id == app.user.id %}
+        <div class="col-md-offset-1 col-md-3">
+            <form class="form" method="post" action="{{ path('add_cash') }}">
+                <div class="form-group">
+                    <h4 class="text-right">Cash: {{ user.cash|number_format(2, '.', ' ') }} lv.</h4>
+                    <input class="form-control" type="number" name="cash" placeholder="How much do you want to add?">
+                    <br>
+                    <input class="btn btn-primary btn-block" type="submit" name="submit" value="Add Cash">
+                </div>
+            </form>
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+
+    <div class="container">
+        <div class="row">
+            {% if items|length == 0 %}
+                <div class="col-md-offeset-3 col-md-6">
+                    <h2 class="center-text">The User has not put anything up for auction.</h2>
+                </div>
+
+            {% else %}
+                {% for item in items %}
+                    <div class="col-sm-8 col-lg-8 col-md-8 col-md-offset-2">
+                        <div class="thumbnail">
+                            <img class="thumbImage" src="{{ asset(item.imagePath) }}">
+                            <div class="caption">
+                                <h4 class="pull-right">{{ item.price }}lv.</h4>
+                                <h4><a target="_blank" href="/item/{{ item.id }}">{{ item.name }}</a>
+                                </h4>
+                                <p>{{ item.description|length > 100 ? item.description|slice(0, 100) ~ '...' : item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="navigatior">
+            {{ knp_pagination_render(items) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

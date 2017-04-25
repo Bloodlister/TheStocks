@@ -1,0 +1,73 @@
+body {
+    padding-top: 75px;
+}
+/*//---------------------------------------------------------------*/
+
+.thumbImage {
+    display: block;
+    margin: 0 auto;
+    min-height: 200px;
+    max-height: 200px;
+    background-position: center;
+    background-size: contain;
+}
+
+.itemImage {
+    max-height: 600px;
+    max-width: 100%;
+}
+
+.cartImage {
+    height: 100%;
+    max-height: 300px;
+}
+
+.field {
+    border: 0;
+    box-shadow: inset 0px 0px 3px #5eb5e0;
+    padding: 22px;
+    border-radius: 5px;
+}
+
+.cartSection {
+    height: 50px;
+}
+
+.leftCorners {
+    border-radius: 5px 0px 0px 5px;
+    border-right: 1px solid black;
+}
+.rightCorners {
+    border-radius: 0px 5px 5px 0px;
+    border-left: 1px solid black;
+}
+
+/*---------------------------------------------------------------------*/
+
+
+.hidden {
+    display: none;
+}
+
+.noresize {
+    resize: none;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.purchase-button-form {
+    display: block;
+    position: relative;
+    margin: auto;
+    height: 200px;
+}
+
+.purchase-button {
+    display: block;
+    position: relative;
+    margin-top:20px;
+    height: 75px;
+    font-size: 30px;
+}

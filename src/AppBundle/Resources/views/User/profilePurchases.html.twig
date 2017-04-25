@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-center">Purchases</h1>
+    <hr>
+    <div class="container-fluid">
+        <div class="row">
+
+            {% for purchase in purchases %}
+                <div class="col-xs-12 col-md-offset-2 col-md-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <img class="col-md-3" src="{{ asset(purchase.item.getImagePath) }}" alt="">
+                                <div class="col-md-9">
+                                    <h3>
+                                        <b>{{ purchase.item.name }}</b> <sub>x</sub> {{ purchase.quantity }}
+                                        <span class="pull-right text-right">
+                                            <b>{{ (purchase.item.price * purchase.quantity|number_format(2, '.')) }}</b> lv.
+                                            <br>
+                                            <sub>{{ purchase.item.price|number_format(2, '.') }} lv.</sub>
+                                        </span>
+                                    </h3>
+                                    <br>
+                                    <h4 class="bg-info">{{ purchase.item.description|length > 300 ? purchase.item.description|slice(0, 300) ~ '...' : purchase.item.description }}</h4>
+                                    <h4>
+                                        Bought from:
+                                        <a href="{{ path('user_profile', { 'id': purchase.item.user.id }) }}"><b>{{ purchase.item.user.username }}</b></a>
+                                        <span class="pull-right text-right"><b>On</b>: <b>{{ purchase.madeOn|date("Y/m/d") }}</b></span>
+                                    </h4>
+                                    <hr>
+                                    <h3><b>Delivered to:</b></h3>
+                                    <h4><b>Receiver</b>: {{ purchase.user.fullName }} / Phone: {{ purchase.phoneNumber }}</h4>
+                                    <h4><b>Country</b>: {{ purchase.country }}</h4>
+                                    <h4><b>Address</b>: {{ purchase.address }}</h4>
+                                    <h4><b>PostCode</b>: {{ purchase.postCode }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

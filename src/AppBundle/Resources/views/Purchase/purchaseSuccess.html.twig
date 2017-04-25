@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 bg-info leftCorners">
+                <h3 class="text-center">OverView</h3>
+            </div>
+            <div class="col-md-4 bg-info">
+                <h3 class="text-center">Purchase Info</h3>
+            </div>
+            <div class="col-md-4 bg-primary rightCorners">
+                <h3 class="text-center">Finish!</h3>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <div class="panel panel-success text-center">
+                    <div class="panel-heading">
+                        <h2>Your puchase was successful!</h2>
+                    </div>
+                    <div class="panel-body">
+                        <h3>You can see your puchase in your inventory</h3>
+                        <a href="{{ path('profile_purchases', { 'id': app.user.id}) }}">To Inventory -></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
