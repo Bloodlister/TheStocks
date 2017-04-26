@@ -46,29 +46,6 @@ class UserController extends Controller
         ];
     }
 
-
-    /**
-     * @Route("/purchases", name="user_purchases")
-     * @Template()
-     *
-     * Display all the purchases of the currently logged user
-     */
-    public function purchasesAction()
-    {
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Item');
-        $inventory = $repo->createQueryBuilder('c')
-            ->select('c')
-            ->where('c.user = :user_id')
-            ->setParameter('user_id', $this->getUser()->getId())
-            ->orderBy('c.name')
-            ->getQuery()
-            ->getResult();
-
-        return [
-            'purchases' => $inventory
-        ];
-    }
-
     /**
      * @Route("/{id}/purchases", name="profile_purchases")
      * @Template()
@@ -76,10 +53,12 @@ class UserController extends Controller
     public function profilePurchasesAction(User $user)
     {
 
-        if ($user->getId() != $this->getUser()->getId() &&
-            $user->getRoles() != 'ROLE_ADMIN')
+        if (!$this->getUser()->isAdmin())
         {
-            return $this->redirectToRoute('item_all');
+            if ($user->getId() != $this->getUser()->getId())
+            {
+                return $this->redirectToRoute('item_all');
+            }
         }
 
         $purchases = $this->getDoctrine()->getRepository('AppBundle:Purchase')->getPurchasesByUser($user->getId());
@@ -90,13 +69,14 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/edit", name="edit_profile")
+     * @Route("/{id}/edit", name="edit_profile")
      * @Template()
      */
-    public function editProfileAction(Request $request)
+    public function editProfileAction($id, Request $request)
     {
-        $user = $this->getUser();
-        $form = $this->createForm(EditUser::class, $this->getUser());
+
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+        $form = $this->createForm(EditUser::class, $user);
 
         $form->handleRequest($request);
 
@@ -114,21 +94,29 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/addcash", name="add_cash")
+     * @Route("{id}/addcash", name="add_cash")
      * @Method("POST")
-     *
-     * @param Request $request
      */
-    public function addCashAction(Request $request)
+    public function addCashAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle:User')->find($this->getUser()->getId());
+
+        $user = $em->getRepository('AppBundle:User')->find($id);
+
+        if (!$this->getUser()->isAdmin())
+        {
+            if ($user->getId() != $this->getUser()->getId())
+            {
+                return $this->redirectToRoute('user_profile', [ 'id' => $this->getUser()->getId() ]);
+            }
+        }
 
         $cash = $request->get('cash');
 
         $user->setCash($user->getCash() + $cash);
 
         $em->flush();
+
         return $this->redirectToRoute('user_profile', [ 'id' => $this->getUser()->getId()]);
     }
 }

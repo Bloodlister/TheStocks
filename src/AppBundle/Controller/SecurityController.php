@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,18 +53,26 @@ class SecurityController extends Controller
      * @return array
      */
     public function registerAction(Request $request) {
+
+        if ($this->getUser())
+        {
+            return $this->redirectToRoute('item_all');
+        }
+
         $form = $this->createForm(UserType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
             $user = $form->getData();
 
-            $enc = $this->get('security.password_encoder');
-
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-
             $user->setPassword($password);
+
+            $roleRepo = $this->getDoctrine()->getRepository('AppBundle:Role');
+            $userRole = $roleRepo->findOneBy( ['name' => 'ROLE_USER'] );
+            $user->addRole($userRole);
 
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($user);

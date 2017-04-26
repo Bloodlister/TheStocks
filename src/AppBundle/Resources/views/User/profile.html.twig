@@ -10,17 +10,17 @@
             <h1>
                 {{ user.username }}
             </h1>
-                {% if user.id == app.user.id %}
-                    <a href="/profile/edit" class="btn btn-success btn-lg">Edit</a>
-                    <a href="/profile/{{ app.user.id }}/purchases" class="btn btn-primary btn-lg">Inventory</a>
+                {% if user.id == app.user.id or app.user.isAdmin() %}
+                    <a href="{{path( 'edit_profile', { 'id': user.id } )}}" class="btn btn-success btn-lg">Edit</a>
+                    <a href="/profile/{{ user.id }}/purchases" class="btn btn-primary btn-lg">Inventory</a>
                 {% endif %}
 
             <h3>Contact: {{ user.email }}</h3>
             <hr>
         </div>
-    {% if user.id == app.user.id %}
+    {% if user.id == app.user.id or app.user.isAdmin()%}
         <div class="col-md-offset-1 col-md-3">
-            <form class="form" method="post" action="{{ path('add_cash') }}">
+            <form class="form" method="post" action="{{ path('add_cash', { 'id': user.id }) }}">
                 <div class="form-group">
                     <h4 class="text-right">Cash: {{ user.cash|number_format(2, '.', ' ') }} lv.</h4>
                     <input class="form-control" type="number" name="cash" placeholder="How much do you want to add?">

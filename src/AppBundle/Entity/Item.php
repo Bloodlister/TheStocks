@@ -34,7 +34,7 @@ class Item
      * @ORM\Column(name="image_path", type="string", length=255, unique=false)
      * @Assert\Image()
      */
-    private $imagePath;
+    private $imagePath = 'images/items/default.jpg';
 
     /**
      * @var string

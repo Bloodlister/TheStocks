@@ -18,12 +18,11 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
                 ->where('i.quantity <> 0')
                 ->orderBy("i.{$sortBy}", "{$in}");
         }
-        else if (is_numeric($category))
+        else if (isset($category))
         {
             return $this->createQueryBuilder('i')
-                ->where('i.category = :category')
-                ->where('i.quantity <> 0')
-                ->setParameter('category', $category)
+                ->where("i.category = {$category}")
+                ->andWhere('i.quantity <> 0')
                 ->orderBy("i.{$sortBy}", "{$in}");
         }
     }
@@ -33,6 +32,7 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->createQueryBuilder('i')
             ->select('i')
-            ->where("i.user = $id");
+            ->where("i.user = $id")
+            ->orderBy('i.createdAt', 'DESC');
     }
 }

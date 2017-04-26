@@ -60,7 +60,7 @@ class CartController extends Controller
 
         if ($request->get('quantity') > $item->getQuantity() || $request->get('quantity') < 1)
         {
-            return $this->redirectToRoute('item_show', [ 'id' => $id] );
+            return $this->redirectToRoute('item_show', [ 'id' => $id ] );
         }
 
         $cart->setItem($item);

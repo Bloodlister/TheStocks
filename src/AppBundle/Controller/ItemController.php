@@ -55,14 +55,20 @@ class ItemController extends Controller
             }
             $item->setUser($this->getUser());
 
-            $file = $item->getImagePath();
-            $path = '/../web/images/items/';
-            $filename = md5($item->getName() . $item->getCategory());
-            $file->move(
-                $this->get('kernel')->getRootDir() . $path,
-                $filename . '.png'
-            );
-            $item->setImagePath('images/items/' . $filename . '.png');
+            if ($item->getImagePath() != null)
+            {
+                $this->uploadPicture($item);
+            } else {
+                $item->setImagePath('images/item/default.jpg');
+            }
+//            $file = $item->getImagePath();
+//            $path = '/../web/images/items/';
+//            $filename = md5($item->getName() . $item->getCategory());
+//            $file->move(
+//                $this->get('kernel')->getRootDir() . $path,
+//                $filename . '.png'
+//            );
+//            $item->setImagePath('images/items/' . $filename . '.png');
 
 
             $em = $this->getDoctrine()->getManager();
@@ -136,12 +142,22 @@ class ItemController extends Controller
      */
     public function itemEditAction(Request $request, $id)
     {
+
         $item = $this->getDoctrine()->getRepository('AppBundle:Item')->find($id);
+
+        if (!$this->getUser()->isEditor())
+        {
+            if ($item->getUser()->getId() != $this->getUser()->getId())
+            {
+                return $this->redirectToRoute('item_show', [ 'id' => $id ]);
+            }
+        }
+
         $itemPath = $item->getImagePath();
 
         if ($item == null) { $this->redirectToRoute('item_all'); }
 
-        $user = $this->getUser();
+        $user = $item->getUser();
 
         if ($user->getId() != $item->getUser()->getId()) { $this->redirectToRoute('item_all'); }
 
@@ -178,7 +194,7 @@ class ItemController extends Controller
      */
     public function itemDeleteProcess(Item $item)
     {
-        if ($item->getUser()->getId() != $this->getUser()->getId())
+        if ($item->getUser()->getId() != $this->getUser()->getId() && !$this->getUser()->isAdmin())
         {
             return $this->redirectToRoute('item_all');
         }

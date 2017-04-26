@@ -13,7 +13,7 @@ class PurchaseForm extends AbstractType
     {
         $builder
             ->setAction('/processing')
-            ->add('receiver', null, [
+            ->add('fullName', null, [
                 'attr' => [
                     'class' => 'form-control'
                 ]
