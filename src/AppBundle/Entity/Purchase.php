@@ -266,9 +266,9 @@ class Purchase
     /**
      * @param string $receiver
      */
-    public function setFullName($receiver)
+    public function setReceiver($receiver)
     {
-        $this->fullName = $receiver;
+        $this->receiver = $receiver;
     }
 
     /**
@@ -276,11 +276,12 @@ class Purchase
      */
     public function setInfo(User $userInfo)
     {
-        $this->setFullName($userInfo->getFullName());
+        $this->setReceiver($userInfo->getFullName());
         $this->setPhoneNumber($userInfo->getPhoneNumber());
         $this->setAddress($userInfo->getAddress());
         $this->setCountry($userInfo->getCountry());
         $this->setPostCode($userInfo->getPostCode());
+        $this->setMadeOn(new \DateTime('now'));
     }
 }
 

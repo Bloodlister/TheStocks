@@ -92,6 +92,28 @@ class Item
      */
     private $createdAt = \DateTime::ATOM;
 
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ItemPromotion", mappedBy="item")
+     * @ORM\JoinTable(name="items_and_discounts",
+     *      joinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="discount_id", referencedColumnName="id")}
+     * )
+     */
+    private $itemDiscount;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CategoryPromotion", mappedBy="category")
+     * @ORM\JoinTable(name="item_category_discounts",
+     *      joinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id")}
+     * )
+     */
+    private $categoryDiscount;
+
+
     /**
      * Get id
      *

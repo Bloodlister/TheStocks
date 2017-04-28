@@ -24,27 +24,45 @@
 
         <div class="row">
             {% for item in items %}
+
                 <div class="col-sm-4 col-lg-4 col-md-4">
                     <div class="thumbnail">
-                        <a href="{{ path('item_show', { 'id': item.id }) }}"><img class="thumbImage" src="{{ asset(item.imagePath) }}"></a>
+                        <a href="{{ path('item_show', { 'id': item[0].id }) }}"><img class="thumbImage" src="{{ asset(item[0].imagePath) }}"></a>
                         <div class="caption">
                             <h4>
-                                <a target="_blank" href="{{ path('item_show', { 'id': item.id}) }}">
-                                    {{ item.name|length > 20 ? item.name|slice(0, 20) ~ '...' : item.name }}
+                                <a target="_blank" href="{{ path('item_show', { 'id': item[0].id}) }}">
+                                    {{ item[0].name|length > 20 ? item[0].name|slice(0, 20) ~ '...' : item[0].name }}
                                 </a>
                             </h4>
-                            <p>{{ item.description|length > 30 ? item.description|slice(0, 30) ~ '...' : item.description }}</p>
-                            {% if item.quantity != 0 %}
+                            <p>{{ item[0].description|length > 30 ? item[0].description|slice(0, 30) ~ '...' : item[0].description }}</p>
+
+                            {% if item[0].quantity != 0 %}
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <h4 class="bg-success">Price: {{ item.price|number_format(2, '.') }} lv.</h4>
+                                        {% if item['discount'] == null %}
+                                            <h4 class="bg-success">Price: {{ item[0].price|number_format(2, '.') }} lv.</h4>
+                                        {% else %}
+                                            <h4 class="bg-success">Price: {{ (item[0].price - item[0].price * (item['discount'] / 100))|number_format(2, '.') }} lv.
+                                                <sub class="bg-danger">
+                                                    <strike>
+                                                        {{ item[0].price|number_format(2, '.') }}
+                                                    </strike> lv.
+                                                </sub>
+                                            </h4>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h5>In Stock: {{ item.quantity }} <a href="{{ path('user_profile', {'id': item.user.id}) }}" class="pull-right">{{ item.user.username }}</a></h5>
+                                        <h5>
+                                            In Stock: {{ item[0].quantity }}
+                                            <a href="{{ path('user_profile', {'id': item[0].user.id}) }}" class="pull-right">
+                                                {{ item[0].user.username }}
+                                            </a>
+                                        </h5>
                                     </div>
                                 </div>
+
                             {% else %}
                                 <h4 class="pull-right bg-danger">Out of Stock</h4>
                             {% endif %}

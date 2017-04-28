@@ -37,6 +37,12 @@ class ItemController extends Controller
      */
     public function itemAddAction(Request $request)
     {
+
+        if (!$this->getUser()->isEditor())
+        {
+            return $this->redirectToRoute('item_all');
+        }
+
         $form = $this->createForm(ItemType::class);
 
         $form->handleRequest($request);
@@ -61,15 +67,6 @@ class ItemController extends Controller
             } else {
                 $item->setImagePath('images/item/default.jpg');
             }
-//            $file = $item->getImagePath();
-//            $path = '/../web/images/items/';
-//            $filename = md5($item->getName() . $item->getCategory());
-//            $file->move(
-//                $this->get('kernel')->getRootDir() . $path,
-//                $filename . '.png'
-//            );
-//            $item->setImagePath('images/items/' . $filename . '.png');
-
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($item);
@@ -114,6 +111,7 @@ class ItemController extends Controller
         else
         {   $in = $requestIn; }
 
+
         $items = $paginator->paginate(
             $this->getDoctrine()->getRepository('AppBundle:Item')->orderItems($orderBy, $in),
             $request->query->getInt('page', 1),
@@ -129,8 +127,11 @@ class ItemController extends Controller
      * @Route("/item/{id}", name="item_show", requirements={"id": "\d+"})
      * @Template()
      */
-    public function itemShowAction(Item $item)
+    public function itemShowAction($id)
     {
+
+        $item = $this->getDoctrine()->getRepository('AppBundle:Item')->getItem($id)[0];
+
         return [
             'item' => $item
         ];
@@ -158,7 +159,6 @@ class ItemController extends Controller
         if ($item == null) { $this->redirectToRoute('item_all'); }
 
         $user = $item->getUser();
-
         if ($user->getId() != $item->getUser()->getId()) { $this->redirectToRoute('item_all'); }
 
         $form = $this->createForm(ItemType::class, $item);

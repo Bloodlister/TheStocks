@@ -11,4 +11,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+
+    /**
+     * @Route("/testarea", name="test")
+     * @Template()
+     */
+    public function debugAction()
+    {
+        $items = $this->getDoctrine()->getRepository('AppBundle:Item')->getAllItems();
+
+        dump($items);
+        exit;
+
+    }
 }

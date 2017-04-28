@@ -86,7 +86,6 @@ class CartController extends Controller
      * @Method("POST")
      *
      * @param Cart $cart
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function cartRemoveItemAction(Cart $cart)
     {

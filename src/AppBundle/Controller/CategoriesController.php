@@ -9,6 +9,32 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CategoriesController extends Controller
 {
+    private function checkOrder($requestOrder)
+    {
+        if ($requestOrder != 'createdAt' &&
+            $requestOrder != 'price' &&
+            $requestOrder != 'name'
+        ) {
+            return 'createdAt';
+        } elseif ($requestOrder == null) {
+            return 'createdAt';
+        } else {
+            return $requestOrder;
+        }
+    }
+
+    private function checkIn($requestIn)
+    {
+        if ($requestIn != 'asc' && $requestIn != 'desc')
+        {
+            return 'desc';
+        }
+        elseif ($requestIn == null)
+        {   return 'desc'; }
+        else
+        {   return $requestIn; }
+    }
+
     /**
      * @Route("/item/category/{id}", name="view_category", requirements={"id": "\d+"})
      * @Template()
@@ -20,25 +46,8 @@ class CategoriesController extends Controller
         $requestOrder = $request->query->get('orderBy');
         $requestIn = $request->query->get('in');
 
-        if( $requestOrder != 'createdAt' &&
-            $requestOrder != 'price' &&
-            $requestOrder != 'name')
-        {
-            $orderBy = 'createdAt';
-        }
-        elseif ($requestOrder == null)
-        {   $orderBy = 'createdAt'; }
-        else
-        {   $orderBy = $requestOrder; }
-
-        if ($requestIn != 'asc' && $requestIn != 'desc')
-        {
-            $in = 'desc';
-        }
-        elseif ($requestIn == null)
-        {   $in = 'desc'; }
-        else
-        {   $in = $requestIn; }
+        $orderBy = $this->checkOrder($requestOrder);
+        $in = $this->checkIn($requestIn);
 
         $items = $paginator->paginate(
             $this->getDoctrine()->getRepository('AppBundle:Item')->orderItems($orderBy, $in, $id),

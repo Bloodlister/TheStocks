@@ -65,7 +65,7 @@
                         </ul>
                     </li>
                     <li>
-                        {% if app.user %}
+                        {% if app.user.isEditor() %}
                             <a href="{{ path('item_add') }}">Add Item</a>
                         {% endif %}
                     </li>

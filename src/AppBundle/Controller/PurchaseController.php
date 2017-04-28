@@ -34,6 +34,7 @@ class PurchaseController extends Controller
         /** @var User $userInfo */
         $userInfo = $form->getData();
 
+
         /** @var Purchase $purchase */
         $purchase = new Purchase();
         $purchase->setInfo($userInfo);
@@ -41,10 +42,10 @@ class PurchaseController extends Controller
         foreach ($carts as $cart)
         {
             /** @var Cart $cart */
+            $purchase->setReceiver($userInfo->getFullName());
             $purchase->setItem($cart->getItem());
-            $purchase->setUser($this->getUser());
             $purchase->setQuantity($cart->getQuantity());
-            $purchase->setMadeOn(new \DateTime('now'));
+            $purchase->setUser($this->getUser());
 
             $em->persist($purchase);
         }

@@ -15,16 +15,41 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
         if ($category == null)
         {
             return $this->createQueryBuilder('i')
+                ->leftJoin('i.discount', 'discount')
+                ->addSelect('discount.discount')
                 ->where('i.quantity <> 0')
                 ->orderBy("i.{$sortBy}", "{$in}");
         }
         else if (isset($category))
         {
             return $this->createQueryBuilder('i')
+                ->leftJoin('i.discount', 'discount')
+                ->addSelect('discount.discount')
                 ->where("i.category = {$category}")
                 ->andWhere('i.quantity <> 0')
                 ->orderBy("i.{$sortBy}", "{$in}");
         }
+    }
+
+    public function getAllItems()
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i')
+            ->leftJoin('i.discount', 'discount')
+            ->addSelect('discount.discount')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getItem($itemId)
+    {
+        return $this->createQueryBuilder('i')
+            ->leftJoin('i.discount', 'd')
+            ->addSelect('d.discount')
+            ->where('i.id = :itemId')
+            ->setParameter('itemId', $itemId)
+            ->getQuery()
+            ->getResult();
     }
 
 
