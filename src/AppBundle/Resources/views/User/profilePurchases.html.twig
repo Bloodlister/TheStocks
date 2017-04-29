@@ -36,6 +36,17 @@
                                     <h4><b>PostCode</b>: {{ purchase.postCode }}</h4>
                                 </div>
                             </div>
+                            <div class="row">
+                                {% if purchase.resold == false %}
+                                    <form method="post" action="{{ path('item_resell', {id: purchase.id}) }}" class="col-md-offset-8 col-md-4">
+                                        <button type="submit" class="btn btn-primary btn-lg">Resell</button>
+                                    </form>
+                                {% else %}
+                                    <div class="col-md-offset-8 col-md-4">
+                                        <button class="btn btn-primary btn-lg" disabled>Already Resold</button>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -49,11 +49,20 @@
 
                                     </div>
                                     <div class=" col-md-4 text-right ">
-                                        <h5>Price: {{ package.item.price | number_format(2, '.') }} lv.</h5>
-                                        <h4>X</h4>
-                                        <h5>Quantity: {{ package.quantity }}</h5>
-                                        <hr>
-                                        <h4>Cost: {{ (package.item.price * package.quantity) | number_format(2, '.') }} lv.</h4>
+                                        {% if package.item.itemDiscount == null %}
+                                            <h5>Price: {{ package.item.price | number_format(2, '.') }} lv.</h5>
+                                            <h4>X</h4>
+                                            <h5>Quantity: {{ package.quantity }}</h5>
+                                            <hr>
+                                            <h4>Cost: {{ (package.item.price * package.quantity) | number_format(2, '.') }} lv.</h4>
+                                        {% else %}
+                                            <h3><sub>Original price: {{ package.item.price | number_format(2, '.') }} lv.</sub></h3>
+                                            <h5>Current price: {{ package.item.getPriceWithDiscount() | number_format(2, '.') }}</h5>
+                                            <h4>X</h4>
+                                            <h5>Quantity: {{ package.quantity }}</h5>
+                                            <hr>
+                                            <h4>Cost: {{ (package.item.getPriceWithDiscount() * package.quantity) | number_format(2, '.') }}</h4>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -65,6 +74,7 @@
                             <h3>You have: {{ app.user.cash | number_format(2, '.') }} lv.</h3>
                             <h3>Total: {{ totalCost | number_format(2, '.')}} lv.</h3>
                             <hr>
+                            <h2></h2>
                             <h2>Remains: {{ (app.user.cash - totalCost) | number_format(2, '.')}} lv.</h2>
                         </div>
                         <div class="col-md-6 purchase-button-form">
@@ -81,7 +91,7 @@
                 {% else %}
 
                     <h3>You currently have nothing in your shopping cart.</h3>
-                    <h2>Go pick out some stuff!</h2>
+                    <h2><a href="{{ path('item_all') }}">Go pick out some stuff!</a></h2>
 
                 {% endif %}
             </div>

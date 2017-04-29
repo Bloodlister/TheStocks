@@ -45,12 +45,31 @@
                 {% for item in items %}
                     <div class="col-sm-8 col-lg-8 col-md-8 col-md-offset-2">
                         <div class="thumbnail">
-                            <img class="thumbImage" src="{{ asset(item.imagePath) }}">
+                            <img class="thumbImage" src="{{ asset(item[0].imagePath) }}">
                             <div class="caption">
-                                <h4 class="pull-right">{{ item.price }}lv.</h4>
-                                <h4><a target="_blank" href="/item/{{ item.id }}">{{ item.name }}</a>
-                                </h4>
-                                <p>{{ item.description|length > 100 ? item.description|slice(0, 100) ~ '...' : item.description }}</p>
+                                {% if item['discount'] == 0 %}
+                                    <div>
+                                        <h4>Current Price: <b>{{ item[0].price }}</b> lv.</h4>
+                                        <h4><a target="_blank" href="{{ path('item_show', {id: item[0].id}) }}">{{ item[0].name }}</a></h4>
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <h4><sub>Original price: <b>{{ item[0].price | number_format(2, '.') }}</b> lv.</sub></h4>
+                                        <h4>Current Price: <b>{{ (item[0].price - (item[0].price * (item['discount'] / 100))) | number_format(2, '.') }}</b> lv.</h4>
+                                    </div>
+                                {% endif %}
+                                <p>{{ item[0].description|length > 100 ? item[0].description|slice(0, 100) ~ '...' : item[0].description }}</p>
+                                <p class="bg-info"><b>
+                                    {% if item[0].isLive() %}
+                                        Displayed
+                                    {% else %}
+                                        Hidden
+                                    {% endif %}
+                                    </b>
+                                    <span class="pull-right">
+                                        Quantity: <b>{{ item[0].quantity }}</b> &nbsp;
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -24,7 +24,7 @@ class ItemPromotion
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Item", inversedBy="discount")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Item", inversedBy="itemDiscount")
      */
     private $item;
 

@@ -10,15 +10,7 @@
                 {{ form_start(form, { 'attr': { 'class': 'panel panel-default' } }) }}
 
                 <div class="panel-body">
-                    {{ form_row(form.name) }}
-                    {{ form_row(form.description) }}
-                    {{ form_row(form.imagePath, { 'label': 'Change Picture' }) }}
-                    <hr>
-                    {{ form_row(form.category) }}
-                    {{ form_row(form.price) }}
-                    {{ form_row(form.quantity) }}
-                    {{ form_row(form.user, { "value": app.user.id }) }}
-                    {{ form_row(form.submit) }}
+                    {{ form_widget(form) }}
                 </div>
 
                 {{ form_end(form) }}

@@ -28,6 +28,15 @@ class Category
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CategoryPromotion", mappedBy="category")
+     * @ORM\JoinTable(name="item_category_discounts",
+     *      joinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="discount_id", referencedColumnName="id")}
+     * )
+     */
+    private $categoryDiscount;
+
 
     /**
      * Get id

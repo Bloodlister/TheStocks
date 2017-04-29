@@ -55,9 +55,9 @@
                                 {% for category in categories.categories %}
                                     <a href="{{ path('view_category', {"id": category.id}) }}">{{ category.name }}</a>
                                 {% endfor %}
-                                <hr>
                                 {% if app.user %}
                                     {% if app.user.isEditor() %}
+                                        <hr>
                                         <a href="{{ path('add_category') }}">Add category</a>
                                     {% endif %}
                                 {% endif %}
@@ -65,8 +65,10 @@
                         </ul>
                     </li>
                     <li>
-                        {% if app.user.isEditor() %}
-                            <a href="{{ path('item_add') }}">Add Item</a>
+                        {% if app.user %}
+                            {% if app.user.isEditor() %}
+                                <a href="{{ path('item_add') }}">Add Item</a>
+                            {% endif %}
                         {% endif %}
                     </li>
                 </ul>

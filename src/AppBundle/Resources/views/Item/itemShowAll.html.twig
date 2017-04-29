@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% dump(items) %}
+
 {% block body %}
 
     <h1 class="text-center">The Stocks!</h1>
@@ -27,25 +29,25 @@
 
                 <div class="col-sm-4 col-lg-4 col-md-4">
                     <div class="thumbnail">
-                        <a href="{{ path('item_show', { 'id': item[0].id }) }}"><img class="thumbImage" src="{{ asset(item[0].imagePath) }}"></a>
+                        <a href="{{ path('item_show', { 'id': item.id }) }}"><img class="thumbImage" src="{{ asset(item.imagePath) }}"></a>
                         <div class="caption">
                             <h4>
-                                <a target="_blank" href="{{ path('item_show', { 'id': item[0].id}) }}">
-                                    {{ item[0].name|length > 20 ? item[0].name|slice(0, 20) ~ '...' : item[0].name }}
+                                <a target="_blank" href="{{ path('item_show', { 'id': item.id}) }}">
+                                    {{ item.name|length > 20 ? item.name|slice(0, 20) ~ '...' : item.name }}
                                 </a>
                             </h4>
-                            <p>{{ item[0].description|length > 30 ? item[0].description|slice(0, 30) ~ '...' : item[0].description }}</p>
+                            <p>{{ item.description|length > 30 ? item.description|slice(0, 30) ~ '...' : item.description }}</p>
 
-                            {% if item[0].quantity != 0 %}
+                            {% if item.quantity != 0 %}
                                 <div class="row">
                                     <div class="col-md-8">
-                                        {% if item['discount'] == null %}
-                                            <h4 class="bg-success">Price: {{ item[0].price|number_format(2, '.') }} lv.</h4>
+                                        {% if item.itemDiscount == null %}
+                                                <h4 class="bg-success">Price: {{ item.price|number_format(2, '.') }} lv.</h4>
                                         {% else %}
-                                            <h4 class="bg-success">Price: {{ (item[0].price - item[0].price * (item['discount'] / 100))|number_format(2, '.') }} lv.
+                                            <h4 class="bg-success">Price: {{ (item.price - item.price * (item.itemDiscount.discount / 100))|number_format(2, '.') }} lv.
                                                 <sub class="bg-danger">
                                                     <strike>
-                                                        {{ item[0].price|number_format(2, '.') }}
+                                                        {{ item.price|number_format(2, '.') }}
                                                     </strike> lv.
                                                 </sub>
                                             </h4>
@@ -55,9 +57,9 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h5>
-                                            In Stock: {{ item[0].quantity }}
-                                            <a href="{{ path('user_profile', {'id': item[0].user.id}) }}" class="pull-right">
-                                                {{ item[0].user.username }}
+                                            In Stock: {{ item.quantity }}
+                                            <a href="{{ path('user_profile', {'id': item.user.id}) }}" class="pull-right">
+                                                {{ item.user.username }}
                                             </a>
                                         </h5>
                                     </div>

@@ -24,7 +24,7 @@ class CategoryPromotion
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="categoryDiscount")
      */
     private $category;
 

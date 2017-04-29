@@ -3,7 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Purchase;
+use AppBundle\Form\EditorItemEditType;
 use AppBundle\Form\ItemType;
+use AppBundle\Form\ResellItemType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -54,18 +57,13 @@ class ItemController extends Controller
 
             $item->setCreatedAt(new \DateTime('now'));
 
-            if ((int)$item->getUser() != $this->getUser()->getId()) {
-                return [
-                    'form' => $form->createView()
-                ];
-            }
             $item->setUser($this->getUser());
 
             if ($item->getImagePath() != null)
             {
                 $this->uploadPicture($item);
             } else {
-                $item->setImagePath('images/item/default.jpg');
+                $item->setImagePath('images/items/default.jpg');
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -130,7 +128,18 @@ class ItemController extends Controller
     public function itemShowAction($id)
     {
 
-        $item = $this->getDoctrine()->getRepository('AppBundle:Item')->getItem($id)[0];
+        /** @var Item $item */
+        $item = $this->getDoctrine()->getRepository('AppBundle:Item')->find($id);
+
+        if ($item == null)
+        {
+            return $this->redirectToRoute('item_all');
+        }
+
+        if (!$this->getUser()->isEditor() && !$item->isLive())
+        {
+            return $this->redirectToRoute('item_all');
+        }
 
         return [
             'item' => $item
@@ -161,12 +170,21 @@ class ItemController extends Controller
         $user = $item->getUser();
         if ($user->getId() != $item->getUser()->getId()) { $this->redirectToRoute('item_all'); }
 
-        $form = $this->createForm(ItemType::class, $item);
+        if ($this->getUser()->isAdmin())
+        {
+            $form = $this->createForm(ItemType::class, $item);
+        }
+        elseif (!$this->getUser()->isAdmin() && $this->getUser()->isEditor())
+        {
+            $form = $this->createForm(EditorItemEditType::class, $item);
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            if ($form->get('imagePath')->getData() != null) {
+            if ($form->has('imagePath') &&
+                $form->get('imagePath')->getData() != '' && $form->get('imagePath')->getData() != null) {
                 $this->uploadPicture($item);
             }
             else {
@@ -194,7 +212,7 @@ class ItemController extends Controller
      */
     public function itemDeleteProcess(Item $item)
     {
-        if ($item->getUser()->getId() != $this->getUser()->getId() && !$this->getUser()->isAdmin())
+        if (!$this->getUser()->isEditor())
         {
             return $this->redirectToRoute('item_all');
         }
@@ -208,8 +226,71 @@ class ItemController extends Controller
             $em->remove($cart);
         }
 
-        $em->remove($item);
+        $item->setDeletedAt(new \DateTime('now'));
+
+        $em->persist($item);
         $em->flush();
         return $this->redirectToRoute("user_profile", [ 'id' => $this->getUser()->getId() ]);
     }
+
+    /**
+     * @Route("/item/{id}/status", name="change_item_status")
+     * @Method("POST")
+     */
+    public function setIsLiveAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $item = $em->getRepository('AppBundle:Item')->find($id);
+
+        $item->setIsLive(!$item->isLive());
+        $em->persist($item);
+        $em->flush();
+
+        return $this->redirectToRoute('item_all');
+    }
+
+
+    /**
+     * @Route("/item/{id}/resell", name="item_resell")
+     * @Method("POST")
+     * @Template()
+     */
+    public function reSellAction(Purchase $purchase, Request $request)
+    {
+        if ($purchase->isResold())
+        {
+            return $this->redirectToRoute('profile_purchases', [ 'id' => $this->getUser()->getId() ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $item = clone $purchase->getItem();
+
+        $item->setId(null);
+        $item->setQuantity($purchase->getQuantity());
+        $item->setUser($this->getUser());
+
+        $form = $this->createForm(ResellItemType::class, $item);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $item = $form->getData();
+
+            $purchase->setResold(true);
+            $item->setName('[Resold] ' . $item->getName());
+
+            $em->persist($item);
+            $em->flush();
+
+            return $this->redirectToRoute('profile_purchases', ['id' => $this->getUser()->getId()]);
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
+    }
+
 }
