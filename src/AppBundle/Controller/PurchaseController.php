@@ -59,9 +59,10 @@ class PurchaseController extends Controller
         foreach($carts as $cart)
         {
             /** @var Cart $cart */
-            $totalCost += $cart->getItem()->getPrice() * $cart->getQuantity();
+            $totalCost += $cart->getItem()->getPriceWithDiscount() * $cart->getQuantity();
 
             $cart->getItem()->setQuantity($cart->getItem()->getQuantity() - $cart->getQuantity());
+            $cart->getItem()->getUser()->setCash($cart->getItem()->getUser()->getCash() + $totalCost);
 
             $em->remove($cart);
         }

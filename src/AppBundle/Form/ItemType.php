@@ -34,7 +34,6 @@ class ItemType extends AbstractType
                 ]
             ])
             ->add('category', null)
-            ->add('user', HiddenType::class)
             ->add('price', MoneyType::class, [
                 'currency' => "USD"
             ])
@@ -49,6 +48,11 @@ class ItemType extends AbstractType
                 ],
                 'data_class' => null,
                 'required' => false
+            ])
+            ->add('isLive', null, [
+                'attr' => [
+                    'class' => 'bg-success'
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

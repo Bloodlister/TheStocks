@@ -15,19 +15,20 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
         if ($category == null)
         {
             return $this->createQueryBuilder('i')
-                ->leftJoin('i.discount', 'discount')
-                ->addSelect('discount.discount')
                 ->where('i.quantity <> 0')
+                ->andWhere('i.deletedAt IS NULL')
+                ->andWhere('i.isLive = 1')
                 ->orderBy("i.{$sortBy}", "{$in}");
         }
         else if (isset($category))
         {
             return $this->createQueryBuilder('i')
-                ->leftJoin('i.discount', 'discount')
-                ->addSelect('discount.discount')
-                ->where("i.category = {$category}")
+                ->where('i.category = :category')
                 ->andWhere('i.quantity <> 0')
-                ->orderBy("i.{$sortBy}", "{$in}");
+                ->andWhere('i.deletedAt IS NULL')
+                ->andWhere('i.isLive = 1')
+                ->orderBy("i.{$sortBy}", "{$in}")
+                ->setParameter('category', $category);
         }
     }
 
@@ -35,18 +36,16 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->createQueryBuilder('i')
             ->select('i')
-            ->leftJoin('i.discount', 'discount')
-            ->addSelect('discount.discount')
+            ->where('i.deletedAt IS NULL')
+            ->andWhere('i.isLive = 1')
             ->getQuery()
             ->getResult();
     }
 
     public function getItem($itemId)
     {
-        return $this->createQueryBuilder('i')
-            ->leftJoin('i.discount', 'd')
-            ->addSelect('d.discount')
-            ->where('i.id = :itemId')
+        return $this->createQueryBuilder('item')
+            ->where('item.id = :itemId')
             ->setParameter('itemId', $itemId)
             ->getQuery()
             ->getResult();
@@ -58,6 +57,11 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('i')
             ->select('i')
             ->where("i.user = $id")
+            ->leftJoin('i.itemDiscount', 'itemDiscount')
+            ->addSelect('itemDiscount.discount')
+            ->andWhere('i.deletedAt IS NULL')
             ->orderBy('i.createdAt', 'DESC');
     }
+
+    // TODO: Get all category and global promotions too and get the biggest among them
 }

@@ -94,6 +94,13 @@ class Purchase
     private $madeOn = \DateTime::ATOM;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="resold", type="boolean")
+     */
+    private $resold = false;
+
+    /**
      * Get id
      *
      * @return int
@@ -282,6 +289,22 @@ class Purchase
         $this->setCountry($userInfo->getCountry());
         $this->setPostCode($userInfo->getPostCode());
         $this->setMadeOn(new \DateTime('now'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResold(): bool
+    {
+        return $this->resold;
+    }
+
+    /**
+     * @param bool $resold
+     */
+    public function setResold(bool $resold)
+    {
+        $this->resold = $resold;
     }
 }
 

@@ -287,7 +287,6 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     /**
@@ -353,7 +352,7 @@ class User implements UserInterface
         {
             /** @var Cart $cart */
 
-            $totalCost += $cart->getItem()->getPrice() * $cart->getQuantity();
+            $totalCost += $cart->getItem()->getPriceWithDiscount() * $cart->getQuantity();
         }
 
         return $totalCost;

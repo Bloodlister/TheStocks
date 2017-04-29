@@ -30,7 +30,11 @@ class CartController extends Controller
             foreach ($items as $item)
             {
                 /** @var $item Cart */
-                $totalCost += $item->getItem()->getPrice() * $item->getQuantity();
+
+                if ($item->getItem()->getItemDiscount() == null)
+                    $totalCost += $item->getItem()->getPrice() * $item->getQuantity();
+                else
+                    $totalCost += $item->getItem()->getPriceWithDiscount() * $item->getQuantity();
             }
         }
 
@@ -113,9 +117,19 @@ class CartController extends Controller
 
         $form->handleRequest($request);
 
+        $carts = $this->getDoctrine()->getRepository('AppBundle:Cart')->getCartsOfUser($this->getUser()->getId());
+
+        $totalCost = 0;
+
+        foreach ($carts as $cart)
+        {
+            /** @var $cart Cart */
+            $totalCost += $cart->getItem()->getPriceWithDiscount() * $cart->getQuantity();
+        }
+
         return [
             'form' => $form->createView(),
-            'totalCost' => $this->getUser()->getCartTotal($em),
+            'totalCost' => $totalCost,
             'user' => $this->getUser()
         ];
     }
