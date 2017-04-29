@@ -4,6 +4,18 @@ body {
 }
 /*//---------------------------------------------------------------*/
 
+.itemCard {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.itemCard:hover {
+    padding: 0px 5px;
+}
+
 .thumbImage {
     display: block;
     margin: 0 auto;

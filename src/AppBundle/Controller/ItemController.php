@@ -247,7 +247,7 @@ class ItemController extends Controller
         $em->persist($item);
         $em->flush();
 
-        return $this->redirectToRoute('item_all');
+        return $this->redirectToRoute('item_show', [ 'id' => $item->getId() ] );
     }
 
 

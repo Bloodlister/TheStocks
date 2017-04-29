@@ -27,7 +27,7 @@
         <div class="row">
             {% for item in items %}
 
-                <div class="col-sm-4 col-lg-4 col-md-4">
+                <div class="col-sm-4 col-lg-4 col-md-4 itemCard">
                     <div class="thumbnail">
                         <a href="{{ path('item_show', { 'id': item.id }) }}"><img class="thumbImage" src="{{ asset(item.imagePath) }}"></a>
                         <div class="caption">
@@ -44,6 +44,7 @@
                                         {% if item.itemDiscount == null %}
                                                 <h4 class="bg-success">Price: {{ item.price|number_format(2, '.') }} lv.</h4>
                                         {% else %}
+                                            <h5>{{ item.itemDiscount.discount }}% Off!</h5>
                                             <h4 class="bg-success">Price: {{ (item.price - item.price * (item.itemDiscount.discount / 100))|number_format(2, '.') }} lv.
                                                 <sub class="bg-danger">
                                                     <strike>

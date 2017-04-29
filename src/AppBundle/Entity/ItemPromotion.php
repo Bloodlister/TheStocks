@@ -39,14 +39,14 @@ class ItemPromotion
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="startDate", type="datetime")
+     * @ORM\Column(name="startDate", type="date")
      */
     private $startDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="endDate", type="datetime")
+     * @ORM\Column(name="endDate", type="date")
      */
     private $endDate;
 
@@ -136,7 +136,7 @@ class ItemPromotion
     /**
      * @return int
      */
-    public function getDiscount(): int
+    public function getDiscount()
     {
         return $this->discount;
     }

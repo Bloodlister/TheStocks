@@ -2,7 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\ItemPromotion;
+use AppBundle\Form\AddPromotionType;
 use AppBundle\Form\CategoryType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,5 +43,42 @@ class EditorController extends Controller
         return [
             'form' => $form->createView()
         ];
+    }
+
+    /**
+     * @Route("/item/{id}/promotion", name="add_item_promotion")
+     * @Method("POST")
+     * @Template()
+     */
+    public function addPromotionAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $item = $this->getDoctrine()->getRepository('AppBundle:Item')->find($id);
+
+        $form = $this->createForm(AddPromotionType::class, $item->getItemDiscount());
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            if ($item->getItemDiscount() != null)
+            {
+                $em->remove($item->getItemDiscount());
+            }
+            /** @var ItemPromotion $promotion */
+            $promotion = $form->getData();
+            $promotion->setItem($item);
+
+            $em->persist($promotion);
+            $em->flush();
+            return $this->redirectToRoute('item_show', ['id' => $item->getId()]);
+        }
+
+        return [
+            'form' => $form->createView(),
+            'item' => $item
+        ];
+
     }
 }
