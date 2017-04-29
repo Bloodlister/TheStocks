@@ -353,7 +353,11 @@ class Item
         }
         else
         {
-            return $this->price - $this->price * ($this->getItemDiscount()->getDiscount() / 100);
+            $now = new \DateTime('now');
+            if ($now >= $this->getItemDiscount()->getStartDate() && $now <= $this->getItemDiscount()->getEndDate())
+                return $this->price - $this->price * ($this->getItemDiscount()->getDiscount() / 100);
+            else
+                return $this->price;
         }
     }
 }

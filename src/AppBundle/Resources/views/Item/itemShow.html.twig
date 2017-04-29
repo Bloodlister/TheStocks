@@ -24,17 +24,14 @@
                                 <p>{{ item.description | capitalize}}</p>
                             </div>
 
-                            {% if item.itemDiscount != null %}
-                                {% if item.itemDiscount.discount != 0 %} <h3 class="center-text">Discount: {{ item.itemDiscount.discount }}%</h3> {% endif %}
+                            {% if item.priceWithDiscount != item.price %}
+                                <h3 class="center-text">Discount: {{ item.itemDiscount.discount }}%</h3>
                             {% endif %}
 
 
-                            {% if item.itemDiscount != null %}
-                                {% if item.itemDiscount.discount != 0 %}
-                                    <h1 class="center-text">{{ (item.price - item.price * (item.itemDiscount.discount / 100))|number_format(2, '.') }} lv.</h1>
-                                    <h3 class="center-text"><sub>Original Price: {{ item.price|number_format(2, '.') }} lv.</sub></h3>
-                                {% endif %}
-
+                            {% if item.priceWithDiscount != item.price %}
+                                <h1 class="center-text">{{ item.priceWithDiscount|number_format(2, '.') }} lv.</h1>
+                                <h3 class="center-text"><sub>Original Price: {{ item.price|number_format(2, '.') }} lv.</sub></h3>
                             {% else %}
                                 <h1 class="center-text">{{ item.price | number_format(2, '.') }} lv.</h1>
                             {% endif %}
