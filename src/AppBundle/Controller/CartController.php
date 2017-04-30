@@ -3,8 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Cart;
-use AppBundle\Entity\Item;
-use AppBundle\Entity\Purchase;
 use AppBundle\Form\PurchaseForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,7 +28,6 @@ class CartController extends Controller
             foreach ($items as $item)
             {
                 /** @var $item Cart */
-
                 if ($item->getItem()->getItemDiscount() == null)
                     $totalCost += $item->getItem()->getPrice() * $item->getQuantity();
                 else
@@ -90,6 +87,7 @@ class CartController extends Controller
      * @Method("POST")
      *
      * @param Cart $cart
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function cartRemoveItemAction(Cart $cart)
     {

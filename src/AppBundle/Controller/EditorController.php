@@ -7,6 +7,7 @@ use AppBundle\Form\AddPromotionType;
 use AppBundle\Form\CategoryType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ class EditorController extends Controller
 {
     /**
      * @Route("/category/add", name="add_category")
+     * @Security("has_role('ROLE_EDITOR')")
      * @Template()
      */
     public function addCategoryAction(Request $request)
@@ -47,6 +49,7 @@ class EditorController extends Controller
 
     /**
      * @Route("/item/{id}/promotion", name="add_item_promotion")
+     * @Security("has_role='ROLE_EDITOR'")
      * @Method("POST")
      * @Template()
      */

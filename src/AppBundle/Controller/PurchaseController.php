@@ -8,6 +8,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form\PurchaseForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +18,8 @@ class PurchaseController extends Controller
 
     /**
      * @Route("/processing", name="processing")
+     * @Security("has_role='ROLE_USER'")
      * @Method("POST")
-     *
      * @param Request $request
      */
     public function makePurchasesAction(Request $request)
@@ -33,7 +34,6 @@ class PurchaseController extends Controller
 
         /** @var User $userInfo */
         $userInfo = $form->getData();
-
 
         /** @var Purchase $purchase */
         $purchase = new Purchase();
@@ -80,6 +80,7 @@ class PurchaseController extends Controller
 
     /**
      * @Route("/purchase/success", name="purchase_success")
+     * @Security("has_role='ROLE_USER'")
      * @Method("POST")
      * @Template()
      */

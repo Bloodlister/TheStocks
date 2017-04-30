@@ -53,5 +53,4 @@ class ItemRepository extends \Doctrine\ORM\EntityRepository
             ->orderBy('i.createdAt', 'DESC');
     }
 
-    // TODO: Get all category and global promotions too and get the biggest among them
 }

@@ -295,7 +295,7 @@ class Item
     /**
      * @return \DateTime
      */
-    public function getDeletedAt(): \DateTime
+    public function getDeletedAt()
     {
         return $this->deletedAt;
     }

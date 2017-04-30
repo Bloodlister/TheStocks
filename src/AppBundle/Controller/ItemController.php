@@ -127,19 +127,14 @@ class ItemController extends Controller
      */
     public function itemShowAction($id)
     {
-
         /** @var Item $item */
         $item = $this->getDoctrine()->getRepository('AppBundle:Item')->find($id);
 
-        if ($item == null)
-        {
+        if ($item->getDeletedAt() != null && !$this->getUser()->isAdmin())
             return $this->redirectToRoute('item_all');
-        }
 
-        if (!$this->getUser()->isEditor() && !$item->isLive())
-        {
+        if (!$item->isLive() && !$this->getUser()->isAdmin())
             return $this->redirectToRoute('item_all');
-        }
 
         return [
             'item' => $item
@@ -155,11 +150,15 @@ class ItemController extends Controller
 
         $item = $this->getDoctrine()->getRepository('AppBundle:Item')->find($id);
 
+        if (!$this->getUser())
+        {
+            return $this->redirectToRoute('item_all');
+        }
         if (!$this->getUser()->isEditor())
         {
             if ($item->getUser()->getId() != $this->getUser()->getId())
             {
-                return $this->redirectToRoute('item_show', [ 'id' => $id ]);
+                return $this->redirectToRoute('item_all');
             }
         }
 

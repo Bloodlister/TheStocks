@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form\EditUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,19 +22,25 @@ class UserController extends Controller
 {
     /**
      * @Route("/{id}", name="user_profile", requirements={"id"= "\d+"})
+     * @Route("/", defaults={"id" = null})
      * @Template()
      */
     public function profileAction(Request $request, $id)
     {
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+        if (!$this->getUser())
+            return $this->redirectToRoute('item_all');
 
-        if (!is_numeric($id) || $user == null)
+        if ($id != null)
+            $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+        else
+            $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($this->getUser()->getId());
+
+        if ($user == null)
         {
             return $this->redirectToRoute('user_profile', ['id' => $this->getUser()->getId()]);
         }
 
         $paginator = $this->get('knp_paginator');
-
         $items = $paginator->paginate(
             $this->getDoctrine()->getRepository('AppBundle:Item')->userItems($user->getId()),
             $request->query->getInt('page', 1),
@@ -48,6 +55,7 @@ class UserController extends Controller
 
     /**
      * @Route("/{id}/purchases", name="profile_purchases")
+     * @Security("has_role('ROLE_USER')")
      * @Template()
      */
     public function profilePurchasesAction(User $user)
@@ -70,12 +78,22 @@ class UserController extends Controller
 
     /**
      * @Route("/{id}/edit", name="edit_profile")
+     * @Security("has_role='ROLE_USER'")
      * @Template()
      */
     public function editProfileAction($id, Request $request)
     {
 
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+
+        if (!$this->getUser()->isAdmin())
+        {
+            if ($user->getId() != $this->getUser()->getId() || $user == null)
+            {
+                return $this->redirectToRoute('item_all');
+            }
+        }
+
         $form = $this->createForm(EditUser::class, $user);
 
         $form->handleRequest($request);
@@ -95,6 +113,7 @@ class UserController extends Controller
 
     /**
      * @Route("{id}/addcash", name="add_cash")
+     * @Security("has_role='ROLE_USER'")
      * @Method("POST")
      */
     public function addCashAction($id, Request $request)
@@ -105,7 +124,7 @@ class UserController extends Controller
 
         if (!$this->getUser()->isAdmin())
         {
-            if ($user->getId() != $this->getUser()->getId())
+            if ($user->getId() != $this->getUser()->getId() || $user == null)
             {
                 return $this->redirectToRoute('user_profile', [ 'id' => $this->getUser()->getId() ]);
             }
