@@ -40,17 +40,17 @@
 
                             {% if item.quantity != 0 %}
                                 <div class="row">
-                                    <div class="col-md-8">
+                                    <div class="col-md-12">
                                         {% if item.priceWithDiscount == item.price %}
                                                 <h4 class="bg-success">Price: {{ item.price|number_format(2, '.') }} lv.</h4>
                                         {% else %}
-                                            <h5>{{ item.itemDiscount.discount }}% Off!</h5>
                                             <h4 class="bg-success">Price: {{ item.priceWithDiscount|number_format(2, '.') }} lv.
-                                                <sub class="bg-danger">
+                                                <span class="bg-danger">
                                                     <strike>
                                                         {{ item.price|number_format(2, '.') }}
                                                     </strike> lv.
-                                                </sub>
+                                                </span>
+                                                <sub>{{ item.itemDiscount.discount }}% Off!</sub>
                                             </h4>
                                         {% endif %}
                                     </div>

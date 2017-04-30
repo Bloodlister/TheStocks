@@ -54,6 +54,7 @@
             </div>
 
             {% if app.user %}
+                {% if item.user.id == app.user.id or app.user.isEditor() %}
                     <div class="col-sm-6 com-lg-6 col-md-6 col-md-offset-3">
                         <form method="post" action="{{ path('change_item_status', {id: item.id }) }}">
                             {% if item.isLive() %}
@@ -62,6 +63,7 @@
                                 <button class="btn btn-success btn-lg btn-block">Put on the marjet</button>
                             {% endif %}
                         </form>
+                {% endif %}
                 {% if app.user.isEditor() %}
                         <br>
                         <form method="post" action="{{ path('item_delete', { id: item.id }) }}">

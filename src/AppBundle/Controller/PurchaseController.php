@@ -35,12 +35,13 @@ class PurchaseController extends Controller
         /** @var User $userInfo */
         $userInfo = $form->getData();
 
-        /** @var Purchase $purchase */
-        $purchase = new Purchase();
-        $purchase->setInfo($userInfo);
 
         foreach ($carts as $cart)
         {
+            /** @var Purchase $purchase */
+            $purchase = new Purchase();
+            $purchase->setInfo($userInfo);
+
             /** @var Cart $cart */
             $purchase->setReceiver($userInfo->getFullName());
             $purchase->setItem($cart->getItem());
