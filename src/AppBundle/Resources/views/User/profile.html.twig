@@ -47,10 +47,10 @@
                         <div class="thumbnail">
                             <img class="thumbImage" src="{{ asset(item[0].imagePath) }}">
                             <div class="caption">
+                                        <h4><a target="_blank" href="{{ path('item_show', {id: item[0].id}) }}">{{ item[0].name }}</a></h4>
                                 {% if item['discount'] == 0 %}
                                     <div>
                                         <h4>Current Price: <b>{{ item[0].price }}</b> lv.</h4>
-                                        <h4><a target="_blank" href="{{ path('item_show', {id: item[0].id}) }}">{{ item[0].name }}</a></h4>
                                     </div>
                                 {% else %}
                                     <div>

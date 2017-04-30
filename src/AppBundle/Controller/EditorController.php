@@ -49,7 +49,7 @@ class EditorController extends Controller
 
     /**
      * @Route("/item/{id}/promotion", name="add_item_promotion")
-     * @Security("has_role='ROLE_EDITOR'")
+     * @Security("has_role('ROLE_EDITOR')")
      * @Method("POST")
      * @Template()
      */
