@@ -133,7 +133,7 @@ class ItemController extends Controller
         if ($item->getDeletedAt() != null && !$this->getUser()->isAdmin())
             return $this->redirectToRoute('item_all');
 
-        if (!$item->isLive() && !$this->getUser()->isAdmin())
+        if (!$item->isLive() && (!$this->getUser()->isAdmin() && $item->getUser()->getId() != $this->getUser()->getId()))
             return $this->redirectToRoute('item_all');
 
         return [

@@ -78,7 +78,7 @@ class UserController extends Controller
 
     /**
      * @Route("/{id}/edit", name="edit_profile")
-     * @Security("has_role='ROLE_USER'")
+     * @Security("has_role('ROLE_USER')")
      * @Template()
      */
     public function editProfileAction($id, Request $request)
@@ -112,8 +112,8 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("{id}/addcash", name="add_cash")
-     * @Security("has_role='ROLE_USER'")
+     * @Route("/{id}/addcash", name="add_cash")
+     * @Security("has_role('ROLE_USER')")
      * @Method("POST")
      */
     public function addCashAction($id, Request $request)

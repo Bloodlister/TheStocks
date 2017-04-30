@@ -18,7 +18,7 @@ class PurchaseController extends Controller
 
     /**
      * @Route("/processing", name="processing")
-     * @Security("has_role='ROLE_USER'")
+     * @Security("has_role('ROLE_USER')")
      * @Method("POST")
      * @param Request $request
      */
@@ -80,7 +80,7 @@ class PurchaseController extends Controller
 
     /**
      * @Route("/purchase/success", name="purchase_success")
-     * @Security("has_role='ROLE_USER'")
+     * @Security("has_role('ROLE_USER')")
      * @Method("POST")
      * @Template()
      */

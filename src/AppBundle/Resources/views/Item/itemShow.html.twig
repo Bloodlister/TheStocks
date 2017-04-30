@@ -54,7 +54,6 @@
             </div>
 
             {% if app.user %}
-                {% if app.user.isEditor() %}
                     <div class="col-sm-6 com-lg-6 col-md-6 col-md-offset-3">
                         <form method="post" action="{{ path('change_item_status', {id: item.id }) }}">
                             {% if item.isLive() %}
@@ -63,6 +62,7 @@
                                 <button class="btn btn-success btn-lg btn-block">Put on the marjet</button>
                             {% endif %}
                         </form>
+                {% if app.user.isEditor() %}
                         <br>
                         <form method="post" action="{{ path('item_delete', { id: item.id }) }}">
                             <button class="btn btn-danger btn-lg btn-block" type="submit">Remove</button>
@@ -73,8 +73,8 @@
                         </form>
                         <br>
                         <a href="{{ path('item_edit', { id: item.id }) }}" class="btn btn-primary btn-lg btn-block">Edit</a>
-                    </div>
                 {% endif %}
+                    </div>
             {% endif %}
         </div>
     </div>
