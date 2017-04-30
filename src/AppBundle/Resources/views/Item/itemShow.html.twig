@@ -60,15 +60,15 @@
                             {% if item.isLive() %}
                                 <button class="btn btn-danger btn-lg btn-block">Take off market</button>
                             {% else %}
-                                <button class="btn btn-success btn-lg btn-block">Put on the marjet</button>
+                                <button class="btn btn-success btn-lg btn-block">Put on the market</button>
                             {% endif %}
                         </form>
-                {% endif %}
-                {% if app.user.isEditor() %}
                         <br>
                         <form method="post" action="{{ path('item_delete', { id: item.id }) }}">
                             <button class="btn btn-danger btn-lg btn-block" type="submit">Remove</button>
                         </form>
+                {% endif %}
+                {% if app.user.isEditor() %}
                         <br>
                         <form method="post" action="{{ path('add_item_promotion', {id: item.id}) }}">
                             <button class="btn btn-info btn-lg btn-block">Give Promotion</button>
